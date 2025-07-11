@@ -2,6 +2,8 @@ const range = document.getElementById("range");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const cellSize = canvas.width / virtualSize;
+let primed = true;
+let confirmPaste = false;
 
 // drawing
 canvas.addEventListener("mousemove", (e) => drawing && handleDraw(e));
@@ -12,15 +14,6 @@ canvas.addEventListener("mousedown", (e) => {
 });
 
 canvas.addEventListener("mouseleave", () => mouseup());
-
-document.addEventListener("wheel", (e) => {
-  if (document.getElementById("modal").style.display === "block") return;
-  if (drawing) mouseup();
-  if (!e.ctrlKey) {
-    updateSize(Math.min(Math.max(1, _size + (e.shiftKey ? 2 : 1) * (e.deltaY > 0 ? -1 : 1)), range.max));
-    if (erase) eraser();
-  }
-});
 
 document.addEventListener("mouseup", () => {
   if (drawing) {
@@ -162,6 +155,12 @@ document.getElementById("b-decompose").addEventListener("click", () => {
   const res = decompose(getAreaText());
   if (!res) updateStatus("invalid message, try something else");
   else closeModal();
+});
+
+document.getElementById("paste").addEventListener("click", async () => {
+  const contents = await navigator.clipboard.readText();
+  updateArea(contents);
+  updateStatus("pasted!");
 });
 
 document.getElementById("close").addEventListener("click", () => closeModal());
