@@ -48,7 +48,7 @@ canvas {
   font-size: 1.15em;
   border-radius: 3px;
   vertical-align: middle;
-  background-color: #dbe2ef;
+  background-color: #e5e0ff;
   border: 2px solid #393e46;
 }
 
@@ -156,8 +156,13 @@ canvas {
 
 #end {
   display: flex;
+  align-items: center;
   justify-content: end;
   width: 806px;
+}
+
+#end > span {
+  user-select: none;
 }
 
 #compose {
@@ -168,7 +173,7 @@ canvas {
 
 #modal {
   z-index: 1;
-  display: none;
+  /* display: none; */
   position: fixed;
   left: 0;
   top: 0;
@@ -204,7 +209,7 @@ canvas {
 }
 
 #b-compose {
-  width: 100px;
+  width: 70px;
 }
 
 #copy {
@@ -223,7 +228,12 @@ canvas {
 }
 
 #b-decompose {
-  width: 120px;
+  width: 90px;
+  background-color: #fff5ea;
+}
+
+#b-decompose:hover {
+  background-color: #ffeddb !important;
 }
 
 #paste {
