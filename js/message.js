@@ -154,7 +154,7 @@ const decompose = (text, source = true) => {
   const seen = {};
   let repeats = 0;
 
-  pencil();
+  updateTool("KeyW");
   for (let i = 0; i < rows.length; i++) {
     let row = rows[i];
     let mult = 0;
