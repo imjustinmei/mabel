@@ -42,6 +42,7 @@ const action = (undo) => {
   for (let i = undo ? 0 : index - 1; i < index; i++) {
     if (stack[i][0] === "d") {
       decompose(messages[stack[i].slice(1)], false);
+      s2 = history.slice(0, i).filter(Number.isInteger).at(-1) || 5;
       continue;
     }
 
@@ -188,9 +189,14 @@ const decompose = (text, source = true) => {
   }
 
   if (source) {
+    if (index < stack.length) {
+      stack.length = index;
+      history.length = index;
+    }
+
     stack.push("d" + messages.length);
     messages.push(text);
-    history.push(-1);
+    history.push("d");
     index++;
   }
 
