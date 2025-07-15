@@ -2,20 +2,30 @@ const range = document.getElementById("range");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const cellSize = canvas.width / virtualSize;
+const mobile = WURFL.is_mobile;
 let primed = true;
 let confirmPaste = false;
 
-// drawing
-canvas.addEventListener("mousemove", (e) => drawing && handleDraw(e));
+if (mobile) document.body.style.setProperty("margin-top", "30%");
 
-canvas.addEventListener("mousedown", (e) => {
-  drawing = true;
-  handleDraw(e);
+// drawing
+canvas.addEventListener(mobile ? "touchmove" : "pointermove", (e) => {
+  drawing && handleDraw(e);
 });
 
-canvas.addEventListener("mouseleave", () => mouseup());
+canvas.addEventListener(
+  mobile ? "touchstart" : "pointerdown",
+  (e) => {
+    if (mobile) e.preventDefault();
+    drawing = true;
+    handleDraw(e);
+  },
+  { passive: !mobile }
+);
 
-document.addEventListener("mouseup", () => {
+canvas.addEventListener(mobile ? "touchend" : "pointerleave", () => mouseup());
+
+document.addEventListener(mobile ? "touchend" : "pointerup", () => {
   if (drawing) {
     drawing = false;
 
@@ -86,8 +96,8 @@ document.addEventListener("keydown", (e) => {
 });
 
 // sidebar
-p.addEventListener("click", () => updateTool("KeyW"));
-e.addEventListener("click", () => updateTool("KeyE"));
+document.getElementById("p").addEventListener("pointerdown", () => updateTool("KeyW"));
+document.getElementById("e").addEventListener("pointerdown", () => updateTool("KeyE"));
 
 range.addEventListener("input", (e) => {
   updateSize(e.target.value);
@@ -113,11 +123,14 @@ const updateArea = (message) => (document.getElementById("area").value = message
 
 const getAreaText = () => document.getElementById("area").value;
 
-document.getElementById("compose").addEventListener("click", () => {
+document.getElementById("compose").addEventListener("pointerdown", () => {
   document.getElementById("modal").style.display = "block";
 });
 
-document.getElementById("b-compose").addEventListener("click", () => {
+document.getElementById("undo").addEventListener("pointerdown", () => action(true));
+document.getElementById("redo").addEventListener("pointerdown", () => action(false));
+
+document.getElementById("b-compose").addEventListener("pointerdown", () => {
   const composition = _compose();
   if (composition) {
     updateArea(_compose());
@@ -125,7 +138,7 @@ document.getElementById("b-compose").addEventListener("click", () => {
   } else updateStatus("invalid message");
 });
 
-document.getElementById("copy").addEventListener("click", async () => {
+document.getElementById("copy").addEventListener("pointerdown", async () => {
   try {
     if (getAreaText() !== "") {
       await navigator.clipboard.writeText(getAreaText());
@@ -136,7 +149,7 @@ document.getElementById("copy").addEventListener("click", async () => {
   }
 });
 
-document.getElementById("download").addEventListener("click", () => {
+document.getElementById("download").addEventListener("pointerdown", () => {
   if (getAreaText() === "") return;
 
   const url = URL.createObjectURL(new Blob([getAreaText()], { type: "text/plain" }));
@@ -151,36 +164,36 @@ document.getElementById("download").addEventListener("click", () => {
   updateStatus("downloaded!");
 });
 
-document.getElementById("b-decompose").addEventListener("click", () => {
+document.getElementById("b-decompose").addEventListener("pointerdown", () => {
   const res = decompose(getAreaText());
   if (!res) updateStatus("invalid message, try something else");
   else closeModal();
 });
 
-document.getElementById("paste").addEventListener("click", async () => {
+document.getElementById("paste").addEventListener("pointerdown", async () => {
   const contents = await navigator.clipboard.readText();
   updateArea(contents);
   updateStatus("pasted!");
 });
 
-document.getElementById("close").addEventListener("click", () => closeModal());
+document.getElementById("close").addEventListener("pointerdown", () => closeModal());
 
-document.getElementById("modal").addEventListener("mousedown", (e) => e.target.id === "modal" && closeModal());
+document.getElementById("modal").addEventListener("pointerdown", (e) => e.target.id === "modal" && closeModal());
 
-trash.addEventListener("click", () => {
+document.getElementById("trash").addEventListener("click", () => {
   prompted = !prompted;
   document.getElementById("confirm").style.display = prompted ? "flex" : "none";
 });
 
-document.getElementById("yea").addEventListener("click", () => {
+document.getElementById("yea").addEventListener("pointerdown", () => {
   clearCanvas();
   history.length = 0;
   stack.length = 0;
   index = 0;
-  trash.click();
+  document.getElementById("trash").click();
 });
 
-document.getElementById("no").addEventListener("click", () => trash.click());
+document.getElementById("no").addEventListener("pointerdown", () => document.getElementById("trash").click());
 
 window.addEventListener("beforeunload", (e) => history.length > 0 && e.preventDefault());
 

@@ -16,7 +16,7 @@ for (let i = 0; i < lowerset.length; i++) {
   upper[lower[char]] = char;
 }
 
-const mouseup = () => document.dispatchEvent(new MouseEvent("mouseup"));
+const mouseup = () => document.dispatchEvent(new MouseEvent(mobile ? "touchend" : "pointerup"));
 
 const render = (curve) => {
   if (curve.length == 1) draw(curve[0].y, curve[0].x);

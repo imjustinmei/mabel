@@ -84,7 +84,7 @@ const handleDraw = (e) => {
     return;
   }
 
-  const [col, row] = toPixel(e.clientX, e.clientY);
+  const [col, row] = toPixel((mobile ? e.touches[0] : e).clientX, (mobile ? e.touches[0] : e).clientY);
 
   // interpolate since mousedown is discrete
   if (prevC !== col || prevR !== row) {

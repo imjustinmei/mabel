@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="user-scalable=no" />
     <title>mabel</title>
     <link rel="icon" href="icons/favicon.ico" />
     <link rel="stylesheet" href="styles.css" />
@@ -35,8 +36,14 @@
       </div>
     </div>
     <div id="end">
-      <span>messages here &rarr;</span>
-      <button title="Compose" class="tool" id="compose"></button>
+      <div id="actions">
+        <button title="Undo (Ctrl + Z)" class="tool" id="undo"></button>
+        <button title="Redo (Ctrl + Y/Ctrl + Shift + Z)" class="tool" id="redo"></button>
+      </div>
+      <div>
+        <span>messages here &rarr;</span>
+        <button title="Compose" class="tool" id="compose"></button>
+      </div>
     </div>
     <div id="modal">
       <div id="modal-body">
@@ -54,6 +61,7 @@
         <span id="status"></span>
       </div>
     </div>
+    <script src="https://wurfl.io/wurfl.js"></script>
     <script src="js/draw.js"></script>
     <script src="js/message.js"></script>
     <script src="js/events.js" defer></script>
